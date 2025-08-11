@@ -1,11 +1,10 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
-import logger from "./utils/logger";
-import pool from "./config/database"; // ✅ Import MySQL pool
+import pool from "./config/database"; // MySQL pool
 import bcrypt from "bcrypt";
 
 dotenv.config();
@@ -17,10 +16,15 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// Routes
+// Root route
+app.get("/", (req: Request, res: Response) => {
+  res.send("Welcome to Multi-Shop!");
+});
+
+// API Routes
 app.use("/api", routes);
 
-// Error handling
+// Error Handling Middlewares
 app.use(notFound);
 app.use(errorHandler);
 
@@ -31,12 +35,14 @@ app.listen(PORT, async () => {
     const connection = await pool.getConnection();
     await connection.ping();
     connection.release();
-    logger.info("✅ MySQL Database connected successfully");
-  } catch (err) {
-    logger.error("❌ Failed to connect to MySQL Database:", err);
+    console.log("✅ MySQL Database connected successfully");
+  } catch (error) {
+    console.error("❌ Failed to connect to MySQL Database:", error);
   }
 
-  logger.info(
-    `🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+  console.log(
+    `🚀 Server running in ${
+      process.env.NODE_ENV || "development"
+    } mode on port ${PORT}`
   );
 });
