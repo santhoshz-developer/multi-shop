@@ -1,3 +1,6 @@
+// src/app/shops/[id]/management/ProductList.tsx
+"use client";
+
 import React from "react";
 import { Box, Paper, Typography, Avatar, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -24,10 +27,14 @@ export const ProductList = ({
           placeContent: "center",
           p: 5,
           minHeight: "300px",
+          bgcolor: "#fff",
+          borderRadius: "12px",
+          border: "1px solid #e0e0e0",
+          mt: 3,
         }}
       >
-        <Typography color="rgba(255, 255, 255, 0.5)">
-          No products in this category.
+        <Typography color="text.secondary">
+          No products found in this category.
         </Typography>
       </Box>
     );
@@ -46,21 +53,25 @@ export const ProductList = ({
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
             <Paper
+              elevation={0}
               sx={{
                 p: 2,
                 display: "flex",
                 alignItems: "center",
                 gap: 2,
-                bgcolor: "rgba(28, 37, 61, 0.8)",
-                color: "white",
+                bgcolor: "#ffffff",
+                color: "text.primary",
                 transition: "background-color 0.2s",
-                "&:hover": { bgcolor: "rgba(40, 51, 80, 0.9)" },
+                border: "1px solid #e0e0e0",
+                borderRadius: "12px",
+                "&:hover": { bgcolor: "#f5f5f5" },
               }}
             >
               <Avatar
                 src={product.image}
                 alt={product.name}
-                sx={{ width: 56, height: 56 }}
+                sx={{ width: 56, height: 56, bgcolor: "#e0e0e0" }}
+                variant="rounded"
               >
                 {!product.image && product.name.charAt(0)}
               </Avatar>
@@ -69,22 +80,25 @@ export const ProductList = ({
                   {product.name}
                 </Typography>
                 {product.description && (
-                  <Typography
-                    variant="body2"
-                    sx={{ color: "rgba(255,255,255,0.7)" }}
-                  >
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     {product.description}
                   </Typography>
                 )}
               </Box>
-              <Typography sx={{ minWidth: "80px", textAlign: "right" }}>
+              <Typography
+                sx={{
+                  minWidth: "80px",
+                  textAlign: "right",
+                  fontWeight: "bold",
+                }}
+              >
                 ₹{product.price.toFixed(2)}
               </Typography>
               <Typography
                 sx={{
                   minWidth: "100px",
                   textAlign: "right",
-                  color: "rgba(255,255,255,0.7)",
+                  color: "text.secondary",
                 }}
               >
                 {product.stock} in stock
@@ -95,14 +109,14 @@ export const ProductList = ({
                   onClick={() => onEditProduct(product)}
                   aria-label="Edit product"
                 >
-                  <EditIcon fontSize="small" sx={{ color: "white" }} />
+                  <EditIcon fontSize="small" />
                 </IconButton>
                 <IconButton
                   size="small"
                   onClick={() => onDeleteProduct(product.id)}
                   aria-label="Delete product"
                 >
-                  <DeleteIcon fontSize="small" sx={{ color: "white" }} />
+                  <DeleteIcon fontSize="small" />
                 </IconButton>
               </Box>
             </Paper>

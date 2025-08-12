@@ -10,6 +10,7 @@ import {
   deleteShopProduct,
   fetchAllShops,
   fetchShopCategory,
+  fetchShopDetails,
 } from "@/service/api/shopApi";
 
 export interface ShopCategory {
@@ -119,6 +120,14 @@ export const useShopManagement = () => {
   const allShops = allShopsResponse?.data ?? [];
 
   const {
+    data: getShopDetailsResponse,
+    isLoading: shopDetailsLoading,
+    error: shopDetailsError,
+  } = useFetchShopDetails(shopId) as any;
+
+  const getShopDetails = getShopDetailsResponse?.data ?? [];
+
+  const {
     data: shopProductsResponse,
     isLoading: isProductsLoading,
     error: shopProductsError,
@@ -150,33 +159,37 @@ export const useShopManagement = () => {
     if (!allShops.length || !shopId) return null;
     return allShops.find((s) => s.shop_id === shopId) || null;
   }, [allShops, shopId]);
+const filteredProducts = useMemo(() => {
+  if (!categories?.length || !shopProducts?.length) return [];
 
-  // Business Logic: Filter products by category
-  const filteredProducts = useMemo(() => {
-    if (!categories?.length || !shopProducts?.length) return [];
-    const currentCategoryId = categories[state.activeTab]?.category_id;
-    if (!currentCategoryId)
-      return shopProducts.map((product) => ({
-        id: product.product_id,
-        name: product.name,
-        price: parseFloat(product.price),
-        stock: product.stock_quantity,
-        categoryId: product.category_id,
-        description: product.description,
-        image: product.main_image,
-      }));
-    return shopProducts
-      .filter((p) => p.category_id === currentCategoryId)
-      .map((product) => ({
-        id: product.product_id,
-        name: product.name,
-        price: parseFloat(product.price),
-        stock: product.stock_quantity,
-        categoryId: product.category_id,
-        description: product.description,
-        image: product.main_image,
-      }));
-  }, [shopProducts, categories, state.activeTab]);
+  // If activeTab = 0 → All Products
+  if (state.activeTab === 0) {
+    return shopProducts.map((product) => ({
+      id: product.product_id,
+      name: product.name,
+      price: parseFloat(product.price),
+      stock: product.stock_quantity,
+      categoryId: product.category_id,
+      description: product.description,
+      image: product.main_image,
+    }));
+  }
+
+  // Else → specific category (offset by -1 because of "All Products")
+  const currentCategoryId = categories[state.activeTab - 1]?.category_id;
+
+  return shopProducts
+    .filter((p) => p.category_id === currentCategoryId)
+    .map((product) => ({
+      id: product.product_id,
+      name: product.name,
+      price: parseFloat(product.price),
+      stock: product.stock_quantity,
+      categoryId: product.category_id,
+      description: product.description,
+      image: product.main_image,
+    }));
+}, [shopProducts, categories, state.activeTab]);
 
   // Business Logic: Download QR Code
   const handleDownloadQR = useCallback(async () => {
@@ -309,7 +322,6 @@ export const useShopManagement = () => {
     }));
   }, [shopProducts]);
 
-
   return {
     state,
     shop,
@@ -320,6 +332,9 @@ export const useShopManagement = () => {
     categories,
     isProductsLoading,
     isCategoryLoading,
+    getShopDetails,
+    shopDetailsLoading,
+    shopDetailsError,
     handleTabChange,
     openProductModal,
     closeProductModal,
@@ -337,7 +352,12 @@ const useAllShopsData = () =>
     queryKey: ["shops"],
     queryFn: fetchAllShops,
   });
-
+const useFetchShopDetails = (shopId: string) =>
+  useQuery({
+    queryKey: ["shops", shopId],
+    queryFn: () => fetchShopDetails(shopId),
+    enabled: !!shopId,
+  });
 const useFetchShopProducts = (shopId: string, activeTab: number) =>
   useQuery<any[]>({
     queryKey: ["shopProducts", shopId, activeTab],
