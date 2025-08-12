@@ -91,7 +91,7 @@ const ShopListingPage = () => {
           animate="visible"
         >
           <StyledGridBox>
-            {allShops?.data?.map((shop) => (
+            {allShops?.map((shop) => (
               <Box key={shop.shop_id} sx={{ height: 380 }}>
                 <ShopCard
                   id={shop.shop_id}

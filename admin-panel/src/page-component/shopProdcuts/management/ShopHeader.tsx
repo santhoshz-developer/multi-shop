@@ -1,10 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-import { Box, Typography, Button, Modal, IconButton } from "@mui/material";
+// src/app/shops/[id]/management/ShopHeader.tsx
+"use client";
+
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Modal,
+  IconButton,
+  styled,
+} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
 import { Shop } from "@/hooks/useShopManagement";
+import { ExcelUploadModal } from "./ExcelUploadModal";
+import { UploadFile } from "@mui/icons-material";
 
 interface ShopHeaderProps {
   shop: Shop;
@@ -23,16 +35,31 @@ export const ShopHeader = ({
   onQrModalClose,
   onDownloadQR,
 }: ShopHeaderProps) => {
+  const [excelModalOpen, setExcelModalOpen] = useState(false);
+
+  const handleExcelModalOpen = () => {
+    setExcelModalOpen(true);
+  };
+
+  const handleExcelModalClose = () => {
+    setExcelModalOpen(false);
+  };
+
+  const handleFileUpload = (file: File) => {
+    // Implement your file upload logic here
+    console.log(file);
+    handleExcelModalClose();
+  };
+
   return (
     <>
       <Box
         sx={{
           p: 3,
           mb: 3,
-          background: "rgba(28, 37, 61, 0.6)",
-          backdropFilter: "blur(12px)",
-          borderRadius: "16px",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
+          background: "#ffffff",
+          borderRadius: "12px",
+          border: "1px solid #e0e0e0",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -48,7 +75,7 @@ export const ShopHeader = ({
               variant="h4"
               component="h1"
               fontWeight="bold"
-              color="white"
+              color="#1c274c"
             >
               {shop.name}
             </Typography>
@@ -56,7 +83,7 @@ export const ShopHeader = ({
               sx={{
                 display: "flex",
                 alignItems: "center",
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "text.secondary",
                 mt: 0.5,
               }}
             >
@@ -65,19 +92,28 @@ export const ShopHeader = ({
             </Box>
           </Box>
 
-          {shop.qr_code_url && (
-            <Box sx={{ ml: "auto" }}>
+          <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
+            {shop.qr_code_url && (
               <IconButton
                 onClick={onQrModalOpen}
                 sx={{
-                  color: "white",
-                  "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" },
+                  color: "text.primary",
+                  "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
                 }}
               >
                 <QrCode2Icon fontSize="large" />
               </IconButton>
-            </Box>
-          )}
+            )}
+            <IconButton
+              onClick={handleExcelModalOpen}
+              sx={{
+                color: "text.primary",
+                "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
+              }}
+            >
+              <UploadFile fontSize="large" />
+            </IconButton>
+          </Box>
         </Box>
 
         <Button
@@ -90,7 +126,7 @@ export const ShopHeader = ({
             "&:hover": { bgcolor: "#1d4ed8" },
           }}
         >
-          Add Product
+          Add
         </Button>
       </Box>
 
@@ -116,9 +152,7 @@ export const ShopHeader = ({
             <img
               src={shop.qr_code_url}
               alt={`QR Code for ${shop.name}`}
-              width={250}
-              height={250}
-              style={{ width: "100%", height: "auto" }}
+              style={{ width: "100%", height: "auto", maxWidth: "250px" }}
             />
           )}
           <Typography variant="body2" sx={{ mt: 2, color: "text.secondary" }}>
@@ -139,6 +173,12 @@ export const ShopHeader = ({
           </Button>
         </Box>
       </Modal>
+
+      <ExcelUploadModal
+        open={excelModalOpen}
+        onClose={handleExcelModalClose}
+        onFileUpload={handleFileUpload}
+      />
     </>
   );
 };

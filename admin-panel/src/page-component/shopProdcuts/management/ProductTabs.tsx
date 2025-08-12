@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect, useState } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
 import { motion } from "framer-motion";
@@ -20,19 +22,23 @@ export const ProductTabs = ({
     width: 0,
   });
 
+  // Add "All Products" as the first tab
+  const allTabs = [{ id: "all", name: "All Products" }, ...categories];
+
   useEffect(() => {
     const tabElement = tabRefs.current[activeTab];
     if (tabElement) {
       const { offsetLeft, offsetWidth } = tabElement;
       setGliderStyle({ x: offsetLeft, width: offsetWidth });
     }
-  }, [activeTab, categories]);
+  }, [activeTab, allTabs]);
 
+  
   return (
     <Box
       sx={{
         borderBottom: 1,
-        borderColor: "rgba(255, 255, 255, 0.12)",
+        borderColor: "divider",
         position: "relative",
       }}
     >
@@ -44,7 +50,7 @@ export const ProductTabs = ({
         aria-label="Product categories"
         sx={{ "& .MuiTabs-indicator": { display: "none" } }}
       >
-        {categories.map((cat, index) => (
+        {allTabs.map((cat, index) => (
           <Tab
             key={cat.id}
             label={cat.name}
@@ -52,11 +58,11 @@ export const ProductTabs = ({
               tabRefs.current[index] = el;
             }}
             sx={{
-              color: "rgba(255, 255, 255, 0.7)",
+              color: "text.secondary",
               fontWeight: "bold",
               position: "relative",
               zIndex: 1,
-              "&.Mui-selected": { color: "white" },
+              "&.Mui-selected": { color: "primary.main" },
             }}
           />
         ))}
