@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
 import { motion } from "framer-motion";
 import { ShopCategory } from "@/hooks/useShopManagement";
@@ -23,7 +23,10 @@ export const ProductTabs = ({
   });
 
   // Add "All Products" as the first tab
-  const allTabs = [{ id: "all", name: "All Products" }, ...categories];
+  const allTabs = useMemo(
+    () => [{ id: "all", name: "All Products" }, ...categories],
+    [categories]
+  );
 
   useEffect(() => {
     const tabElement = tabRefs.current[activeTab];
@@ -31,9 +34,8 @@ export const ProductTabs = ({
       const { offsetLeft, offsetWidth } = tabElement;
       setGliderStyle({ x: offsetLeft, width: offsetWidth });
     }
-  }, [activeTab, allTabs]);
+  }, [activeTab, categories.length]);
 
-  
   return (
     <Box
       sx={{

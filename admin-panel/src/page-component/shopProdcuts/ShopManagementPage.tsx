@@ -68,14 +68,14 @@ const ShopManagementPage = () => {
   return (
     // The Container is no longer needed here
     <>
-      <ShopHeader
+      {/* <ShopHeader
         shop={shop}
         onAddProductClick={openProductModal}
         qrModalOpen={qrModalOpen}
         onQrModalOpen={openQrModal}
         onQrModalClose={closeQrModal}
         onDownloadQR={handleDownloadQR}
-      />
+      /> */}
 
       {categories && categories.length > 0 && (
         <ProductTabs
