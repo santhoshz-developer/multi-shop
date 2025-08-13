@@ -77,6 +77,14 @@ const ShopManagementPage = () => {
         onDownloadQR={handleDownloadQR}
       /> */}
 
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{ mb: 4, fontWeight: "bold", color: "#1c274c" }}
+      >
+        Products
+      </Typography>
+
       {categories && categories.length > 0 && (
         <ProductTabs
           categories={categories}

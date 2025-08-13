@@ -205,13 +205,13 @@ const ShopDetailView = ({ shop, onNavigate }) => {
  * Main Page Component
  * Orchestrates the entire page view.
  */
-export default function ShopsListPage() {
+export default function ShopDashboard() {
   const router = useRouter();
   const { getShopDetails, shopDetailsLoading, shopDetailsError } =
     useShopManagement();
 
   const handleNavigation = (shopId) => {
-    router.push(`/shopManagement/${shopId}`);
+    router.push(`/shop/${shopId}/products`);
     // Example: router.push('/shop/shop-006');
     console.log(`Navigating to /shop/${shopId}`);
   };

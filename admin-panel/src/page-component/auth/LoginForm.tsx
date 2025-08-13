@@ -52,7 +52,7 @@ export function LoginForm() {
         const firstShop = result.data[0];
         console.log("firstShop", firstShop);
 
-        router.push(`/shop/${firstShop.shop_id}`);
+        router.push(`/shop-dashboard/${firstShop.shop_id}`);
       } else {
         router.push("/shops/create");
       }
